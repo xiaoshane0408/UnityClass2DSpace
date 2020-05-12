@@ -3,7 +3,9 @@ using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
-    bool ControlSound = true;
+    // teacher:
+    bool ControlSound = false;
+    // bool ControlSound = true;
     [Header("聲音的按鈕")]
     public Image SoundBtnImg;
     [Header("聲音開啟圖")]
@@ -15,19 +17,35 @@ public class Menu : MonoBehaviour
     [Header("下拉選單")]
     public Dropdown ScreenSizeDropdown;
 
+    // PlayerPrefs 儲存/取值資料欄位的名稱
+    string SaveAudioSlider = "SaveAudioSlider";
+    string SaveDropdown = "SaveDropdown";
+
+    // teacher:
+    private void Start()
+    {
+        Control_Sound();
+        ScreenSet();
+        // SoundBar.value = SaveData.SaveAudioSlider;
+        SoundBar.value = PlayerPrefs.GetFloat(SaveAudioSlider);
+        ScreenSizeDropdown.value = PlayerPrefs.GetInt(SaveDropdown);
+        AudioListener.volume = SoundBar.value;
+    }
+
     private void Update()
     {
-        #region 聲音拉霸控制
-        AudioListener.volume = SoundBar.value;
-        if(AudioListener.volume == 0)
-        {
-            SoundBtnImg.sprite = SoundOffImg;
-        }
-        else
-        {
-            SoundBtnImg.sprite = SoundOnImg;
-        }
-        #endregion
+        // 觸發slider才會更改值，若放在Update裡會一直偵測
+        //#region 聲音拉霸控制
+        //AudioListener.volume = SoundBar.value;
+        //if(AudioListener.volume == 0)
+        //{
+        //    SoundBtnImg.sprite = SoundOffImg;
+        //}
+        //else if(ControlSound == true)
+        //{
+        //    SoundBtnImg.sprite = SoundOnImg;
+        //}
+        //#endregion
 
         #region 解析度設定
         //if(ScreenSizeDropdown.value == 0)
@@ -43,7 +61,7 @@ public class Menu : MonoBehaviour
         //{
         //    Screen.SetResolution(480, 800, false);
         //}
-
+        /*SaveData.SaveDropdown = ScreenSizeDropdown.value;
         switch (ScreenSizeDropdown.value)
         {
             case 0:
@@ -55,7 +73,7 @@ public class Menu : MonoBehaviour
             case 2:
                 Screen.SetResolution(480, 800, false);
                 break;
-        }
+        }*/
         #endregion
     }
 
@@ -66,7 +84,13 @@ public class Menu : MonoBehaviour
         // Application.LoadLevel("場景名稱");
         // Application.loadedLevel -> 讀取當前關卡名稱
         // Application.LoadLevel(Application.loadedLevel);  重新遊戲
-        Application.LoadLevel(1);
+
+        // 儲存聲音 SoundBar.value 值
+        // SaveData.SaveAudioSlider = SoundBar.value;
+        // 儲存浮點數 Playerfebs.SetFloat(儲存欄位名稱,儲存浮點數);
+        PlayerPrefs.SetFloat(SaveAudioSlider,SoundBar.value);
+        PlayerPrefs.SetInt(SaveDropdown, ScreenSizeDropdown.value);
+        Application.LoadLevel(2);
     }
     #endregion
 
@@ -99,4 +123,37 @@ public class Menu : MonoBehaviour
         }
     }
     #endregion
+
+    #region 聲音拉霸控制
+    // teacher      slider -> On Value Changed()
+    public void ChangeAudioSlider()
+    {
+        if (SoundBar.value == 0)
+        {
+            ControlSound = true;
+            Control_Sound();
+        }
+        else
+        {
+            ControlSound = false;
+            Control_Sound();
+        }
+    }
+    #endregion
+
+    public void ScreenSet()
+    {
+        switch (ScreenSizeDropdown.value)
+        {
+            case 0:
+                Screen.SetResolution(1080, 1920, false);
+                break;
+            case 1:
+                Screen.SetResolution(720, 1280, false);
+                break;
+            case 2:
+                Screen.SetResolution(480, 800, false);
+                break;
+        }
+    }
 }

@@ -10,12 +10,12 @@ public class Level : MonoBehaviour
 
     public void NextScene()
     {
-        // 如果場景為 Menu
+        /*// 如果場景為 Menu
         if(NextSceneName == "Menu")
         {
             // Destroy 刪除物件
             Destroy(GameObject.Find("BGM").gameObject);
-        }
+        }*/
         if(NextSceneName == "Movie")
         {
             // GameObject.Find("BGM").SetActive(false); -> 關掉後會找不到BGM這物件
