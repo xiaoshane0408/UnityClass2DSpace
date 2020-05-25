@@ -37,6 +37,8 @@ public class Bullet : MonoBehaviour
         // 玩家的子彈打到有 Collider2D 物件，就檢測該物件的標籤是否為 Enemy
         if(other.GetComponent<Collider2D>().tag == "Enemy" && gameObject.tag == "PlayerBullet")
         {
+            // GameObject.Find("player").GetComponent<Player>().GetScore();
+            GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().GetScore();
             // 爆炸特效
             // other.transform.position 兩個物件碰撞位置
             // other.transform.rotation 兩個物件碰撞的旋轉值
@@ -46,6 +48,21 @@ public class Bullet : MonoBehaviour
             // 敵機被消滅
             Destroy(other.gameObject);
             // 自己子彈物件被消滅
+            Destroy(gameObject);
+        }
+
+        // 玩家子彈打到敵機子彈
+        if (other.GetComponent<Collider2D>().tag == "EnemyBullet" && gameObject.tag == "PlayerBullet")
+        {
+            Destroy(other.gameObject);
+            Destroy(gameObject);
+        }
+
+        // 敵機子彈打到玩家
+        if (other.GetComponent<Collider2D>().tag == "Player" && gameObject.tag == "EnemyBullet")
+        {
+            // GameObject.Find("player").GetComponent<Player>().Damage(10f);
+            other.GetComponent<Player>().Damage(10f);
             Destroy(gameObject);
         }
     }

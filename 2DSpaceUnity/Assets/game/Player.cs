@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -17,6 +18,52 @@ public class Player : MonoBehaviour
     bool UseJoystick;
     // 判斷滑鼠是否點擊玩家物件
     bool MouseClick;
+
+    [Header("玩家血量")]
+    public float PlayerHp = 100;
+    // 程式中計算玩家的血量數值
+    float ScriptHp;
+    [Header("玩家血條")]
+    public Image HpBar;
+
+    [Header("加分")]
+    public int AddScore = 10;
+    int Score;
+    public Text ScoreText;
+
+    // 儲存分數的欄位
+    string SaveScore = "SaveScore";
+
+    private void Start()
+    {
+        // 程式中的血量 = 屬性面板中調整的玩家血量數值
+        ScriptHp = PlayerHp;
+    }
+
+    // 敵機子彈打到玩家，玩家進行扣血
+    public void Damage(float hurt)
+    {
+        // 玩家血量遞減
+        ScriptHp -= hurt;
+        // 玩家血條的數值 = 程式中血量 / 自己設定的血量數值
+        HpBar.fillAmount = ScriptHp / PlayerHp;
+        // 限制玩家血量
+        ScriptHp = Mathf.Clamp(ScriptHp, 0, PlayerHp);
+        // 如果玩家血量 <= 0
+        if (ScriptHp <= 0)
+        {
+            PlayerPrefs.SetFloat(SaveScore, Score);
+            // 跳到遊戲結束畫面
+            Application.LoadLevel("GameOver");
+        }
+    }
+
+    // 得分
+    public void GetScore()
+    {
+        Score += AddScore;
+        ScoreText.text = "Score: " + Score;
+    }
 
     // Update is called once per frame
     void Update()
@@ -151,4 +198,5 @@ public class Player : MonoBehaviour
         MouseClick = false;
     }
     #endregion
+
 }
